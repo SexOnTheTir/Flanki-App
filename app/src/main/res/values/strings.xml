@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Flanki</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Hasło</string>
+    <string name="action_sign_in">Zaloguj się lub zarejestruj</string>
+    <string name="action_sign_in_short">Zaloguj się</string>
+    <string name="error_invalid_email">Ten adres e-mail jest nieprawidłowy</string>
+    <string name="error_invalid_password">Hasło jest za krótkie</string>
+    <string name="error_incorrect_password">Hasło nieprawidłowe</string>
+    <string name="error_field_required">To pole jest wymagane</string>
+    <string name="sign_in">Autoryzacja</string>
+</resources>
