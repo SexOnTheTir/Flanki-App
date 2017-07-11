@@ -4,100 +4,90 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RegisterActivity extends AppCompatActivity {
 
-import static android.Manifest.permission.READ_CONTACTS;
-
-public class LoginActivity extends AppCompatActivity {
-
-    private UserLoginTask mAuthTask = null;
-    private String[] DUMMY_CREDENTIALS = {"test@o2.pl:testtt", "login@o2.pl:1234"};
+    private UserRegisterTask mRegisterTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private EditText mLoginView;
+    private EditText mEmailView;
     private EditText mPasswordView;
+    private Button singUpButton;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView loginText;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        TextView registerText = (TextView) findViewById(R.id.register_button);
-        registerText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        initUI();
+        singUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
+        loginText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initUI() {
+        mLoginView = (EditText) findViewById(R.id.login);
+        mEmailView = (EditText) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        singUpButton = (Button) findViewById(R.id.sign_up_button);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        loginText = (TextView) findViewById(R.id.login_button);
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mRegisterTask != null) {
             return;
         }
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mLoginView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String login = mLoginView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -120,6 +110,17 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
+        // Check for a valid login.
+        if (TextUtils.isEmpty(login)) {
+            mLoginView.setError(getString(R.string.error_field_required));
+            focusView = mLoginView;
+            cancel = true;
+        } else if (!isLoginValid(login)) {
+            mLoginView.setError(getString(R.string.login_already_exists));
+            focusView = mLoginView;
+            cancel = true;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -128,13 +129,18 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mRegisterTask = new UserRegisterTask(login, email, password);
+            mRegisterTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
         return email.contains("@");
+    }
+
+    private boolean isLoginValid(String login) {
+        //TODO: CHECK IF USER ALREADY EXISTS
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -164,14 +170,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
+        private final String mLogin;
 
-        UserLoginTask(String email, String password) {
+        UserRegisterTask(String login, String email, String password) {
             mEmail = email;
             mPassword = password;
+            mLogin = login;
         }
 
         @Override
@@ -184,24 +192,19 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] data = credential.split(":");
-                if (data[0].equals(mEmail)) {
-                    return data[1].equals(mPassword);
-                }
-            }
+            //TODO: SAVE USER TO DB
 
-            return false;
+            return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
+            mRegisterTask = null;
             showProgress(false);
 
             if (success) {
                 // go to mainActivity with email
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                 intent.putExtra("email", mEmail);
                 startActivity(intent);
             } else {
@@ -212,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
+            mRegisterTask = null;
             showProgress(false);
         }
     }

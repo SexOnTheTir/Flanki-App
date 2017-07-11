@@ -2,13 +2,22 @@
     <string name="app_name">Flanki</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="sign_in">Logowanie</string>
+    <string name="prompt_email_login">Login lub adres e-mail</string>
     <string name="prompt_password">Hasło</string>
-    <string name="action_sign_in">Zaloguj się lub zarejestruj</string>
-    <string name="action_sign_in_short">Zaloguj się</string>
+    <string name="action_sign_in">Zaloguj się</string>
     <string name="error_invalid_email">Ten adres e-mail jest nieprawidłowy</string>
     <string name="error_invalid_password">Hasło jest za krótkie</string>
     <string name="error_incorrect_password">Hasło nieprawidłowe</string>
     <string name="error_field_required">To pole jest wymagane</string>
-    <string name="sign_in">Autoryzacja</string>
+    <string name="register_info">Nie posiadasz konta? Zarejestruj się.</string>
+
+    <!-- Strings related to register -->
+    <string name="sign_up">Rejestracja</string>
+    <string name="prompt_email">Adres e-mail</string>
+    <string name="prompt_login">Login</string>
+    <string name="action_sign_up">Zarejestruj się</string>
+    <string name="login_already_exists">Login jest już zajęty</string>
+    <string name="login_info">Masz już konto? Zaloguj się.</string>
+
 </resources>

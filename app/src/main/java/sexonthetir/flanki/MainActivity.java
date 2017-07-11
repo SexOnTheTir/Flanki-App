@@ -18,6 +18,6 @@ public class MainActivity extends AppCompatActivity {
         String email = intent.getStringExtra("email");
 
         TextView welcomeText = (TextView) findViewById(R.id.welcomeText);
-        welcomeText.setText("Witaj " + email + "!");
+        welcomeText.setText("Witaj, " + email.substring(0,email.indexOf("@")) + "!");
     }
 }
