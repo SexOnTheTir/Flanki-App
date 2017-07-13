@@ -3,10 +3,10 @@
 
     <!-- Strings related to login -->
     <string name="sign_in">Logowanie</string>
-    <string name="prompt_email_login">Login lub adres e-mail</string>
+    <string name="prompt_email_login">Login</string>
     <string name="prompt_password">Hasło</string>
     <string name="action_sign_in">Zaloguj się</string>
-    <string name="error_invalid_email">Ten adres e-mail jest nieprawidłowy</string>
+    <string name="error_invalid_email">Ten login jest nieprawidłowy</string>
     <string name="error_invalid_password">Hasło jest za krótkie</string>
     <string name="error_incorrect_password">Hasło nieprawidłowe</string>
     <string name="error_field_required">To pole jest wymagane</string>

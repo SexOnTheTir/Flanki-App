@@ -31,6 +31,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseAnonymousUtils;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +57,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if(ParseUser.getCurrentUser().getUsername() != null)
+        {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -134,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isEmailValid(String email) {
-        return email.contains("@");
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -176,24 +190,34 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            try {
-                // simulate
-                // TODO: REMOVE IT.
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] data = credential.split(":");
-                if (data[0].equals(mEmail)) {
-                    return data[1].equals(mPassword);
+            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    if(e == null)
+                    {
+                        if(user == null)
+                        {
+                            Log.i("info", "userx exist");
+                            mPasswordView.setError("Użytkownik nie istnieje");
+                            mPasswordView.requestFocus();
+                        }else
+                        {
+                            Log.i("info", "nxt");
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }else
+                    {
+                        Log.i("info", "err");
+                        mPasswordView.setError(e.getMessage());
+                        mPasswordView.requestFocus();
+                    }
                 }
-            }
-
+            });
             return false;
         }
-
+/*
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
@@ -209,11 +233,40 @@ public class LoginActivity extends AppCompatActivity {
                 mPasswordView.requestFocus();
             }
         }
-
+    */
         @Override
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void anonnymouseLogin(View view)
+    {
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if(e == null)
+                {
+                    if(user == null)
+                    {
+                        mPasswordView.setError("Błąd z zalogowaniem gościa.");
+                        mPasswordView.requestFocus();
+                    }else
+                    {
+                        Log.i("info", "nxt");
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }else
+                {
+                    Log.i("info", "err");
+                    mPasswordView.setError(e.getMessage());
+                    mPasswordView.requestFocus();
+                }
+            }
+            });
+
     }
 }

@@ -10,11 +10,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -28,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     private TextView loginText;
+    private boolean created = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,25 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        //TODO REPAIR
     }
 
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
@@ -184,19 +175,36 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            try {
-                // simulate
-                // TODO: REMOVE IT.
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            Log.i("it", "has been reqq");
+            ParseUser newUser = new ParseUser();
+            newUser.setUsername(mLogin);
+            newUser.setPassword(mPassword);
+            newUser.setEmail(mEmail);
 
-            //TODO: SAVE USER TO DB
-
-            return true;
+            newUser.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e == null)
+                    {
+                        created = true;
+                        Log.i("info", "rejestracja udana");
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        Toast.makeText(getApplicationContext(), "Konto zostało stworzone, zaloguj się teraz.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }else
+                    {
+                        created = false;
+                        Log.i("err", e.getMessage());
+                        mPasswordView.setError(e.getMessage());
+                        mPasswordView.requestFocus();
+                    }
+                }
+            });
+            mRegisterTask = null;
+            showProgress(false);
+            return created;
         }
-
+    /*
         @Override
         protected void onPostExecute(final Boolean success) {
             mRegisterTask = null;
@@ -204,15 +212,13 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (success) {
                 // go to mainActivity with email
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("email", mEmail);
-                startActivity(intent);
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError("Coś poszło nie tak!");
                 mPasswordView.requestFocus();
             }
         }
-
+        */
         @Override
         protected void onCancelled() {
             mRegisterTask = null;
