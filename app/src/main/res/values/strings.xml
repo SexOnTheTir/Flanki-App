@@ -20,4 +20,10 @@
     <string name="login_already_exists">Login jest już zajęty</string>
     <string name="login_info">Masz już konto? Zaloguj się.</string>
 
+    <string name="logout">Zostałeś wylogowany.</string>
+    <string name="logout_error">Blad przy wylogowywaniu.</string>
+    <string name="annonymous_user_login">Błąd z zalogowaniem gościa.</string>
+    <string name="user_dont_exist">Użytkownik nie istnieje.</string>
+    <string name="account_created">Konto zostało stworzone, zaloguj się teraz.</string>
+
 </resources>

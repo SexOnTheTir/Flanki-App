@@ -197,20 +197,23 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         if(user == null)
                         {
-                            Log.i("info", "userx exist");
-                            mPasswordView.setError("Użytkownik nie istnieje");
+                            mPasswordView.setError(getString(R.string.user_dont_exist));
+                            mAuthTask = null;
+                            showProgress(false);
                             mPasswordView.requestFocus();
                         }else
                         {
-                            Log.i("info", "nxt");
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            mAuthTask = null;
+                            showProgress(false);
                             finish();
                         }
                     }else
                     {
-                        Log.i("info", "err");
                         mPasswordView.setError(e.getMessage());
+                        mAuthTask = null;
+                        showProgress(false);
                         mPasswordView.requestFocus();
                     }
                 }
@@ -250,18 +253,16 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     if(user == null)
                     {
-                        mPasswordView.setError("Błąd z zalogowaniem gościa.");
+                        mPasswordView.setError(getString(R.string.annonymous_user_login));
                         mPasswordView.requestFocus();
                     }else
                     {
-                        Log.i("info", "nxt");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     }
                 }else
                 {
-                    Log.i("info", "err");
                     mPasswordView.setError(e.getMessage());
                     mPasswordView.requestFocus();
                 }

@@ -175,7 +175,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Log.i("it", "has been reqq");
             ParseUser newUser = new ParseUser();
             newUser.setUsername(mLogin);
             newUser.setPassword(mPassword);
@@ -187,14 +186,12 @@ public class RegisterActivity extends AppCompatActivity {
                     if(e == null)
                     {
                         created = true;
-                        Log.i("info", "rejestracja udana");
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                        Toast.makeText(getApplicationContext(), "Konto zostało stworzone, zaloguj się teraz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.account_created), Toast.LENGTH_LONG).show();
                         finish();
                     }else
                     {
                         created = false;
-                        Log.i("err", e.getMessage());
                         mPasswordView.setError(e.getMessage());
                         mPasswordView.requestFocus();
                     }

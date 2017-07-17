@@ -40,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseException e) {
                     if(e == null){
-                        Toast.makeText(getApplicationContext(),"Zostałeś wylogowany", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),getString(R.string.logout), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }else
                     {
-                        Toast.makeText(getApplicationContext(),"Blad przy wylogowywaniu.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),getString(R.string.logout_error), Toast.LENGTH_LONG).show();
                     }
                 }
             });
