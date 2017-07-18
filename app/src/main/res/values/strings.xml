@@ -25,5 +25,6 @@
     <string name="annonymous_user_login">Błąd z zalogowaniem gościa.</string>
     <string name="user_dont_exist">Użytkownik nie istnieje.</string>
     <string name="account_created">Konto zostało stworzone, zaloguj się teraz.</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -23,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView welcomeText = (TextView) findViewById(R.id.welcomeText);
         welcomeText.setText("Witaj, " + ParseUser.getCurrentUser().getUsername());
+        onCreateMap();
+    }
+
+    private void onCreateMap(){
+        Intent mapIntent = new Intent(this,MapsActivity.class);
+        this.startActivity(mapIntent);
     }
 
     @Override
