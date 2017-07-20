@@ -59,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.addMarker(new MarkerOptions().position(loc).title("Twoja pozycja"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 8));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 18));
     }
 
     private void updateLocation() {
@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     });
 
-        }
+
         if(userLoc != null)
         {
            updateMap(userLoc);
@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
+        }
     }
 
     @Override
