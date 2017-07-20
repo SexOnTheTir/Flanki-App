@@ -80,6 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(userLoc != null)
         {
            updateMap(userLoc);
+        }else
+        {
+            Toast.makeText(getApplicationContext(), "Czekam na polozenie...", Toast.LENGTH_SHORT).show();
         }
 
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
